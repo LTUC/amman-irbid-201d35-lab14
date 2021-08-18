@@ -3,8 +3,10 @@
 
 // Create an event listener so that when the delete link is clicked, the removeItemFromCart method is invoked.
 const table = document.getElementById('cart');
+let tbodyEl = document.getElementsByTagName('tbody')[0];
 table.addEventListener('click', removeItemFromCart);
 let cart;
+
 
 function loadCart() {
   const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
@@ -19,17 +21,43 @@ function renderCart() {
 }
 
 // TODO: Remove all of the rows (tr) in the cart table (tbody)
-function clearCart() {}
+function clearCart() {
+  let tbodyEl = document.getElementsByTagName('tbody')[0];
+  tbodyEl.innerHTML = '';
+}
 
 // TODO: Fill in the <tr>'s under the <tbody> for each item in the cart
 function showCart() {
-
   // TODO: Find the table body
-
+  
   // TODO: Iterate over the items in the cart
   // TODO: Create a TR
   // TODO: Create a TD for the delete link, quantity,  and the item
   // TODO: Add the TR to the TBODY and each of the TD's to the TR
+  
+  for (let i = 0; i < cart.items.length; i++) {
+
+    let trEl = document.createElement('tr');
+    
+    let deleteItem = document.createElement('td');
+
+    let deleteLink = document.createElement('a');
+    deleteLink.textContent = 'X';
+    deleteLink.setAttribute('asd', cart.items[i].product);
+    deleteItem.appendChild(deleteLink);
+
+    trEl.appendChild(deleteItem);
+
+    let quantityTd = document.createElement('td');
+    quantityTd.textContent = cart.items[i].quantity;
+    trEl.appendChild(quantityTd);
+
+    let itemTd = document.createElement('td');
+    itemTd.textContent = cart.items[i].product;
+    trEl.appendChild(itemTd);
+
+    tbodyEl.appendChild(trEl);
+  }
 
 }
 
@@ -38,7 +66,14 @@ function removeItemFromCart(event) {
   // TODO: When a delete link is clicked, use cart.removeItem to remove the correct item
   // TODO: Save the cart back to local storage
   // TODO: Re-draw the cart table
-
+  for (let i = 0; i < cart.items.length; i++) {
+    let asd = event.targrt.getAttribute('asd');
+    if (asd === cart.items[i].product) {
+      cart.removeItem(i);
+    }
+    cart.saveToLocalStorage();
+    renderCart(); 
+  }
 }
 
 // This will initialize the page and draw the cart on screen
