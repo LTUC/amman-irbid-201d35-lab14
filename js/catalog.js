@@ -4,7 +4,6 @@
 
 // Set up an empty cart for use on this page.
 const cart = new Cart([]);
-
 // On screen load, we call this method to put all of the busmall options
 // (the things in the Product.allProducts array) into the drop down list.
 function populateForm() {
@@ -12,7 +11,9 @@ function populateForm() {
   //TODO: Add an <option> tag inside the form's select for each product
   const selectElement = document.getElementById('items');
   for (let i in Product.allProducts) {
-
+    let option = document.createElement('option');
+    selectElement.appendChild(option);
+    option.text = Product.allProducts[i].name;
   }
 
 }
@@ -23,6 +24,7 @@ function populateForm() {
 function handleSubmit(event) {
 
   // TODO: Prevent the page from reloading
+  event.preventDefault();
 
   // Do all the things ...
   addSelectedItemToCart();
@@ -34,18 +36,43 @@ function handleSubmit(event) {
 
 // TODO: Add the selected item and quantity to the cart
 function addSelectedItemToCart() {
+  let selectElement = document.getElementById('items');
   // TODO: suss out the item picked from the select list
   // TODO: get the quantity
   // TODO: using those, add one item to the Cart
+  let selectedValue = selectElement.value;
+  let quantityOfItem = document.getElementById('quantity');
+  let quantity = quantityOfItem.value;
+  cart.addItem(selectedValue,quantity);
 }
 
 // TODO: Update the cart count in the header nav with the number of items in the Cart
-function updateCounter() {}
+function updateCounter() {
+  let quantityElement = document.getElementById('quantity');
+  let itemCount = document.getElementById('itemCount');
+  if (itemCount.textContent !== '') {
+    itemCount.textContent =
+      parseInt(itemCount.textContent) + parseInt(quantityElement.value);
+    console.log(quantityElement.value);
+  } else {
+    itemCount.textContent = parseInt(quantityElement.value);
+  }
+}
 
 // TODO: As you add items into the cart, show them (item & quantity) in the cart preview div
 function updateCartPreview() {
   // TODO: Get the item and quantity from the form
   // TODO: Add a new element to the cartContents div with that information
+  let selectElement = document.getElementById('items');
+  let quantityElement = document.getElementById('quantity');
+  let cartPreview = document.getElementById('cartContents');
+  let cartItem = document.createElement('p');
+  cartItem.classList.add('animate-added-cart');
+  cartItem.textContent = `${selectElement.value} added to cart! ${
+    quantityElement.value
+  } item(s)`;
+  cartPreview.appendChild(cartItem);
+  catalogForm.reset();
 }
 
 // Set up the "submit" event listener on the form.
