@@ -1,35 +1,41 @@
 'use strict';
 
-// Cart constructor.
-const Cart = function(items) {
-  // this.items is an array of CartItem instances.
+let Cart = function(items) {
   this.items = items;
 };
 
 Cart.prototype.addItem = function(product, quantity) {
-  // TODO: Fill in this instance method to create a new CartItem and add it to this.items
+  this.items.push(new CartItem(product, quantity));
 };
 
 Cart.prototype.saveToLocalStorage = function() {
-  // TODO: Fill in this instance method to save the contents of the cart to localStorage
+  // The localStorage read-only property of the window interface allows you to access a Storage object for the Document's origin; the stored data is saved across browser sessions.
+
+  window.localStorage.setItem('cart', JSON.stringify(this));
 };
 
-Cart.prototype.removeItem = function(item) {
-  // TODO: Fill in this instance method to remove one item from the cart.
-  // Note: You will have to decide what kind of parameter to pass in here!
+Cart.prototype.removeItem = function(itemToRemove) {
+
+  for (let index = 0; index < this.items.length; index++) 
+  {
+    if (this.items[index].product === itemToRemove.product)
+    {
+      this.items.splice(index, 1);
+    }
+  }
 };
 
-const CartItem = function(product, quantity) {
+let CartItem = function(product, quantity) {
   this.product = product;
   this.quantity = quantity;
 };
 
-// Product contructor.
-const Product = function(filePath, name) {
+let Product = function(filePath, name) {
   this.filePath = filePath;
   this.name = name;
   Product.allProducts.push(this);
 };
+
 Product.allProducts = [];
 
 function generateCatalog() {
@@ -55,5 +61,5 @@ function generateCatalog() {
   new Product('assets/wine-glass.jpg', 'Wine Glass');
 }
 
-// Initialize the app by creating the big list of products with images and names
+
 generateCatalog();
